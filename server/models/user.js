@@ -23,6 +23,11 @@ class Users extends Model {
     return utils.compareHash(attempted, password, salt);
   }
 
+  getUser({username}) {
+
+    return super.get.call(this, {username});
+  }
+
   /**
    * Creates a new user record with the given username and password.
    * This method creates a salt and hashes the password before storing
