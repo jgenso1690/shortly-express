@@ -5,12 +5,15 @@ const partials = require('express-partials');
 const bodyParser = require('body-parser');
 const Auth = require('./middleware/auth');
 const models = require('./models');
-
+const auth = require('./middleware/auth');
+const parseCookies = require('./middleware/cookieParser');
 const app = express();
 
 app.set('views', `${__dirname}/views`);
 app.set('view engine', 'ejs');
 app.use(partials());
+app.use(auth.createSession);
+app.use(parseCookies);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
@@ -21,12 +24,18 @@ app.get('/',
   (req, res) => {
     res.render('index');
   });
+// app.get('/logout',
+//   (req, res) => {
+//     console.log('Im loggeddddd');
+//   });
 
 app.get('/signup',
   (req, res) => {
     res.render('signup');
   });
-
+app.get('/logout',(req, res, next) => {
+  console.log('ADFASAFAFWFWF');
+});
 app.get('/login',
   (req, res) => {
     res.render('login');
@@ -58,7 +67,11 @@ app.post('/signup',
         } else {
           models.Users.create({username, password})
             .then((user) => {
-              res.redirect('/');
+              var value = req.session.hash;
+              models.Sessions.update({hash: value}, {userId: user.insertId})
+                .then(() => {
+                  res.redirect('/');
+                });
             })
             .catch((err) => {
               console.log(err);

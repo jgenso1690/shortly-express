@@ -329,7 +329,7 @@ describe('', function() {
     var cookieParser = require('../server/middleware/cookieParser.js');
     var createSession = require('../server/middleware/auth.js').createSession;
 
-    describe('Cookie Parser', function() {
+    xdescribe('Cookie Parser', function() {
 
       it('parses cookies and assigns an object of key-value pairs to a session property on the request', function(done) {
         var requestWithoutCookies = httpMocks.createRequest();
@@ -371,13 +371,12 @@ describe('', function() {
       });
     });
 
-    xdescribe('Session Parser', function() {
-      it('initializes a new session when there are no cookies on the request', function(done) {
+    describe('Session Parser', function() {
+      xit('initializes a new session when there are no cookies on the request', function(done) {
         var requestWithoutCookies = httpMocks.createRequest();
         var response = httpMocks.createResponse();
 
         createSession(requestWithoutCookies, response, function() {
-          console.log(requestWithoutCookies);
           var session = requestWithoutCookies.session;
           expect(session).to.exist;
           expect(session).to.be.an('object');
@@ -386,7 +385,7 @@ describe('', function() {
         });
       });
 
-      it('sets a new cookie on the response when a session is initialized', function(done) {
+      xit('sets a new cookie on the response when a session is initialized', function(done) {
         var requestWithoutCookie = httpMocks.createRequest();
         var response = httpMocks.createResponse();
 
@@ -398,7 +397,7 @@ describe('', function() {
         });
       });
 
-      it('assigns a session object to the request if a session already exists', function(done) {
+      xit('assigns a session object to the request if a session already exists', function(done) {
 
         var requestWithoutCookie = httpMocks.createRequest();
         var response = httpMocks.createResponse();
@@ -419,7 +418,7 @@ describe('', function() {
         });
       });
 
-      it('creates a new hash for each new session', function(done) {
+      xit('creates a new hash for each new session', function(done) {
         var requestWithoutCookies = httpMocks.createRequest();
         var response = httpMocks.createResponse();
 
@@ -436,7 +435,7 @@ describe('', function() {
         });
       });
 
-      it('assigns a username and userId property to the session object if the session is assigned to a user', function(done) {
+      xit('assigns a username and userId property to the session object if the session is assigned to a user', function(done) {
         var requestWithoutCookie = httpMocks.createRequest();
         var response = httpMocks.createResponse();
         var username = 'BillZito';
@@ -465,7 +464,7 @@ describe('', function() {
         });
       });
 
-      it('clears and reassigns a new cookie if there is no session assigned to the cookie', function(done) {
+      xit('clears and reassigns a new cookie if there is no session assigned to the cookie', function(done) {
         var maliciousCookieHash = '8a864482005bcc8b968f2b18f8f7ea490e577b20';
         var response = httpMocks.createResponse();
         var requestWithMaliciousCookie = httpMocks.createRequest();
@@ -481,7 +480,7 @@ describe('', function() {
     });
   });
 
-  xdescribe('Sessions and cookies', function() {
+  describe('Sessions and cookies', function() {
     var requestWithSession;
     var cookieJar;
 
@@ -505,7 +504,7 @@ describe('', function() {
       done();
     });
 
-    it('saves a new session when the server receives a request', function(done) {
+    xit('saves a new session when the server receives a request', function(done) {
       requestWithSession('http://127.0.0.1:4568/', function(err, res, body) {
         if (err) { return done(err); }
         var queryString = 'SELECT * FROM sessions';
@@ -518,7 +517,7 @@ describe('', function() {
       });
     });
 
-    it('sets and stores a cookie on the client', function(done) {
+    xit('sets and stores a cookie on the client', function(done) {
       requestWithSession('http://127.0.0.1:4568/', function(error, res, body) {
         if (error) { return done(error); }
         var cookies = cookieJar.getCookies('http://127.0.0.1:4568/');
@@ -527,12 +526,11 @@ describe('', function() {
       });
     });
 
-    it('assigns session to a user when user logs in', function(done) {
+    xit('assigns session to a user when user logs in', function(done) {
       addUser(function(err, res, body) {
         if (err) { return done(err); }
         var cookies = cookieJar.getCookies('http://127.0.0.1:4568/');
         var cookieValue = cookies[0].value;
-
         var queryString = `
           SELECT users.username FROM users, sessions
           WHERE sessions.hash = ? AND users.id = sessions.userId
@@ -547,7 +545,7 @@ describe('', function() {
       });
     });
 
-    it('destroys session and cookie when logs out', function(done) {
+    xit('destroys session and cookie when logs out', function(done) {
       addUser(function(err, res, body) {
         if (err) { return done(err); }
         var cookies = cookieJar.getCookies('http://127.0.0.1:4568/');
